@@ -29,9 +29,9 @@ void* thread_foguetes(void* arg) {
         for (int i = 0; i < MAX_FOGUETES; i++) {
             if (lista_foguetes[i].ativo) {
                 // Move foguete
-                lista_foguetes[i].x += lista_foguetes[i].direcao;
+                lista_foguetes[i].y += lista_foguetes[i].direcao;
                 // Remove se saiu da tela
-                if (lista_foguetes[i].x < 0 || lista_foguetes[i].x >= LARGURA_TELA) {
+                if (lista_foguetes[i].y < 0 || lista_foguetes[i].y >= ALTURA_TELA) {
                     lista_foguetes[i].ativo = 0;
                 }
                 // Checa colisão com helicóptero
