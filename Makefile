@@ -14,7 +14,7 @@ SRCS = $(SRC)/main.c \
 
 OBJS = $(SRCS:$(SRC)/%.c=$(OBJ)/%.o)
 
-TARGET = helicoptero
+TARGET = game_exec
 
 .PHONY: all clean
 
