@@ -53,6 +53,11 @@ extern Soldado soldados[TOTAL_SOLDADOS];
 extern int soldados_resgatados;
 extern EstadoJogo estado_jogo;
 
+// Adicione as flags de ocupação e o vetor de baterias
+extern int ponte_ocupada;
+extern int deposito_ocupado;
+extern Bateria baterias[2];
+
 // Protótipos
 void inicializar_jogo();
 

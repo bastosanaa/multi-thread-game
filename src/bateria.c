@@ -22,33 +22,30 @@ void* thread_bateria(void* arg) {
     srand(time(NULL) + id * 100);
 
     while (1) {
-        // Disparo de foguetes
         pthread_mutex_t* mutex_bat = (id == 0) ? &mutex_bateria_0 : &mutex_bateria_1;
         pthread_mutex_lock(mutex_bat);
         if (bat->foguetes_restantes > 0 && !bat->em_recarga) {
-            // Dispara foguete
             criar_foguete(id, bat->x, bat->y, direcao_foguete);
             bat->foguetes_restantes--;
             pthread_mutex_unlock(mutex_bat);
-            usleep(300000 + rand() % 200000); // Delay aleatório entre disparos
+            usleep(300000 + rand() % 200000);
         } else {
             pthread_mutex_unlock(mutex_bat);
 
-            // Precisa recarregar
             // Travessia da ponte (exclusão mútua)
             pthread_mutex_lock(&mutex_ponte);
-            while (/* ponte ocupada por outra bateria */ 0) {
+            while (ponte_ocupada) {
                 pthread_cond_wait(&cond_ponte, &mutex_ponte);
             }
-            // Marca ponte como ocupada (implemente flag se necessário)
+            ponte_ocupada = 1;
             pthread_mutex_unlock(&mutex_ponte);
 
             // Chega ao depósito (exclusão mútua)
             pthread_mutex_lock(&mutex_deposito);
-            while (/* depósito ocupado */ 0) {
+            while (deposito_ocupado) {
                 pthread_cond_wait(&cond_deposito, &mutex_deposito);
             }
-            // Marca depósito como ocupado (implemente flag se necessário)
+            deposito_ocupado = 1;
             bat->em_recarga = 1;
             pthread_mutex_unlock(&mutex_deposito);
 
@@ -64,17 +61,16 @@ void* thread_bateria(void* arg) {
 
             // Libera depósito
             pthread_mutex_lock(&mutex_deposito);
-            // Marca depósito como livre
+            deposito_ocupado = 0;
             pthread_cond_signal(&cond_deposito);
             pthread_mutex_unlock(&mutex_deposito);
 
             // Libera ponte
             pthread_mutex_lock(&mutex_ponte);
-            // Marca ponte como livre
+            ponte_ocupada = 0;
             pthread_cond_signal(&cond_ponte);
             pthread_mutex_unlock(&mutex_ponte);
 
-            // Volta para posição de disparo
             usleep(200000);
         }
     }

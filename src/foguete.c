@@ -7,7 +7,7 @@
 
 #define MAX_FOGUETES 32
 
-static Foguete lista_foguetes[MAX_FOGUETES];
+Foguete lista_foguetes[MAX_FOGUETES];
 
 void criar_foguete(int bateria_id, int x, int y, int direcao) {
     pthread_mutex_lock(&mutex_foguetes);

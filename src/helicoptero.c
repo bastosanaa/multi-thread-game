@@ -68,23 +68,57 @@ void* thread_helicoptero(void* arg) {
 
 // Função para mover o helicóptero
 void mover_helicoptero(int direcao) {
-    // ...implementar lógica de movimentação e limites...
-    // Exemplo:
-    // if (direcao == DIR_CIMA && helicoptero.y > 0) helicoptero.y--;
-    // if (direcao == DIR_BAIXO && helicoptero.y < ALTURA_TELA-1) helicoptero.y++;
-    // if (direcao == DIR_ESQUERDA && helicoptero.x > 0) helicoptero.x--;
-    // if (direcao == DIR_DIREITA && helicoptero.x < LARGURA_TELA-1) helicoptero.x++;
+    // Limites do cenário
+    int nx = helicoptero.x, ny = helicoptero.y;
+    if (direcao == DIR_CIMA && helicoptero.y > 1) ny--;
+    if (direcao == DIR_BAIXO && helicoptero.y < ALTURA_TELA-2) ny++;
+    if (direcao == DIR_ESQUERDA && helicoptero.x > 1) nx--;
+    if (direcao == DIR_DIREITA && helicoptero.x < LARGURA_TELA-2) nx++;
+    // Não permite sair da tela
+    helicoptero.x = nx;
+    helicoptero.y = ny;
 }
 
 // Função para checar colisão do helicóptero
 int checar_colisao_helicoptero() {
-    // ...verificar colisão com foguetes, solo, obstáculos, topo...
-    // Retorne 1 se houver colisão, 0 caso contrário
+    // Colisão com topo
+    if (helicoptero.y == 0)
+        return 1;
+    // Colisão com solo
+    if (helicoptero.y == ALTURA_TELA-1)
+        return 1;
+    // Colisão com baterias
+    if ((helicoptero.x == baterias[0].x && helicoptero.y == baterias[0].y) ||
+        (helicoptero.x == baterias[1].x && helicoptero.y == baterias[1].y))
+        return 1;
+    // Colisão com depósito
+    if (helicoptero.x == 3 && helicoptero.y == ALTURA_TELA/4)
+        return 1;
+    // Colisão com plataforma
+    if (helicoptero.x == LARGURA_TELA-2 && helicoptero.y == ALTURA_TELA/2)
+        return 0; // Não explode, é objetivo
+    // ...pode adicionar obstáculos extras aqui...
     return 0;
 }
 
 // Função para processar resgate de soldados
 void processar_resgate() {
-    // ...verificar se helicóptero está na plataforma e soldados a bordo...
-    // ...incrementar soldados_resgatados se aplicável...
+    // Se está na plataforma e tem soldados a bordo, resgata
+    if (helicoptero.x == LARGURA_TELA-2 && helicoptero.y == ALTURA_TELA/2 && helicoptero.soldados_a_bordo > 0) {
+        pthread_mutex_lock(&mutex_soldados);
+        soldados_resgatados += helicoptero.soldados_a_bordo;
+        helicoptero.soldados_a_bordo = 0;
+        pthread_mutex_unlock(&mutex_soldados);
+    }
+    // Se está sobre um soldado, pega ele (um por vez)
+    for (int i = 0; i < TOTAL_SOLDADOS; i++) {
+        if (!soldados[i].resgatado &&
+            helicoptero.x == soldados[i].x && helicoptero.y == soldados[i].y) {
+            pthread_mutex_lock(&mutex_soldados);
+            soldados[i].resgatado = 1;
+            helicoptero.soldados_a_bordo++;
+            pthread_mutex_unlock(&mutex_soldados);
+            break;
+        }
+    }
 }
