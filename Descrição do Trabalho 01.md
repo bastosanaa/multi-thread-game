@@ -1,3 +1,4 @@
+
 # Trabalho 1: Sincronização de Threads
 
 O objetivo deste trabalho é que o estudante aplique os conceitos de **threads**, **exclusão mútua** e **coordenação de processos** por meio do projeto e implementação de um jogo, conforme segue.
