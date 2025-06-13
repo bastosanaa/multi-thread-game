@@ -17,13 +17,25 @@ extern Bateria baterias[2]; // Defina em jogo.c se necessário
 void* thread_bateria(void* arg) {
     int id = (int)(size_t)arg;
     Bateria* bat = &baterias[id];
-    int direcao_foguete = (id == 0) ? 1 : -1;
+    int direcao_foguete =  -1;
 
+    int direcao_movimento = (id == 0) ? 1 : -1; // Bateria 0 vai para direita, 1 para esquerda
+    int velocidade_movimento = 1; // Velocidade de movimento da bateria
+    
     srand(time(NULL) + id * 100);
 
     while (1) {
         pthread_mutex_t* mutex_bat = (id == 0) ? &mutex_bateria_0 : &mutex_bateria_1;
         pthread_mutex_lock(mutex_bat);
+
+        bat -> x += direcao_movimento * velocidade_movimento;
+
+        if (bat -> x <= 1){
+            direcao_movimento = 1; // Muda direção para direita
+        } else if (bat -> x >= LARGURA_TELA - 2) {
+            direcao_movimento = -1; // Muda direção para esquerda
+        }
+
         if (bat->foguetes_restantes > 0 && !bat->em_recarga) {
             criar_foguete(id, bat->x, bat->y, direcao_foguete);
             bat->foguetes_restantes--;

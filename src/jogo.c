@@ -25,13 +25,13 @@ void inicializar_jogo() {
     }
 
     // Inicializa baterias (exemplo de posições)
-    baterias[0].x = 5;
-    baterias[0].y = ALTURA_TELA / 4;
+    baterias[0].x = LARGURA_TELA / 4;
+    baterias[0].y = ALTURA_TELA - 2;
     baterias[0].foguetes_restantes = 5;
     baterias[0].em_recarga = 0;
 
-    baterias[1].x = LARGURA_TELA - 6;
-    baterias[1].y = 3 * ALTURA_TELA / 4;
+    baterias[1].x = (LARGURA_TELA / 4) * 3;
+    baterias[1].y = ALTURA_TELA - 2;
     baterias[1].foguetes_restantes = 5;
     baterias[1].em_recarga = 0;
 
