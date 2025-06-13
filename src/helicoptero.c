@@ -102,23 +102,63 @@ int checar_colisao_helicoptero() {
 }
 
 // Função para processar resgate de soldados
+// Função para processar resgate de soldados
 void processar_resgate() {
-    // Se está na plataforma e tem soldados a bordo, resgata
+    static int ultima_posicao_x = -1;
+    static int ultima_posicao_y = -1;
+    static int ja_pegou_aqui = 0;
+
+    // detecta se mudou de posição    
+    if (helicoptero.x != ultima_posicao_x || helicoptero.y != ultima_posicao_y) {
+        ultima_posicao_x = helicoptero.x;
+        ultima_posicao_y = helicoptero.y;
+        ja_pegou_aqui = 0; // Resetar flag se mudou de posição
+    }
+
+    // Se pode pegar soldado: não pegou nesta posição e tem espaço no helicóptero
     if (helicoptero.x == LARGURA_TELA-2 && helicoptero.y == ALTURA_TELA/2 && helicoptero.soldados_a_bordo > 0) {
         pthread_mutex_lock(&mutex_soldados);
         soldados_resgatados += helicoptero.soldados_a_bordo;
         helicoptero.soldados_a_bordo = 0;
+        printf("RESGATOU soldados na plataforma!\n");
         pthread_mutex_unlock(&mutex_soldados);
     }
+    
     // Se está sobre um soldado, pega ele (um por vez)
-    for (int i = 0; i < TOTAL_SOLDADOS; i++) {
-        if (!soldados[i].resgatado &&
-            helicoptero.x == soldados[i].x && helicoptero.y == soldados[i].y) {
-            pthread_mutex_lock(&mutex_soldados);
-            soldados[i].resgatado = 1;
-            helicoptero.soldados_a_bordo++;
-            pthread_mutex_unlock(&mutex_soldados);
-            break;
+    if (!ja_pegou_aqui && helicoptero.soldados_a_bordo < MAX_SOLDADOS_HELICOPTERO) {
+        for (int i = 0; i < TOTAL_SOLDADOS; i++) {
+            if (!soldados[i].resgatado &&
+                helicoptero.x == soldados[i].x && helicoptero.y == soldados[i].y) {
+                pthread_mutex_lock(&mutex_soldados);
+                soldados[i].resgatado = 1;
+                helicoptero.soldados_a_bordo++;
+                ja_pegou_aqui = 1; // Já pegou um soldado aqui
+                printf("*** PEGOU soldado %d na posição (%d,%d)! Total a bordo: %d ***\n", i, helicoptero.x, helicoptero.y, helicoptero.soldados_a_bordo);
+                if (helicoptero.soldados_a_bordo >= MAX_SOLDADOS_HELICOPTERO) {
+                    printf("Helicóptero cheio! Volte para a plataforma para resgatar os soldados.\n");
+                }
+                pthread_mutex_unlock(&mutex_soldados);
+                break;
+            }
+        }
+    } 
+    //se helicoptero esta cheio e há soldados na posição
+    else if (helicoptero.soldados_a_bordo >= MAX_SOLDADOS_HELICOPTERO) {
+        for(int i = 0; i < TOTAL_SOLDADOS; i++) {
+            if (!soldados[i].resgatado &&
+                helicoptero.x == soldados[i].x && helicoptero.y == soldados[i].y) {
+                printf("*** HELICÓPTERO LOTADO (%d/%d)! Entregue na plataforma primeiro! ***\n", helicoptero.soldados_a_bordo, MAX_SOLDADOS_HELICOPTERO);
+                break;
+            }
+        }
+    }
+    //se já pegou soldado nesta posição
+    else if (ja_pegou_aqui) {
+        for(int i = 0; i < TOTAL_SOLDADOS; i++) {
+            if (!soldados[i].resgatado && helicoptero.x == soldados[i].x && helicoptero.y == soldados[i].y) {
+                printf("*** JÁ PEGOU soldado nesta posição! Mova-se primeiro! ***\n");
+                break;
+            }
         }
     }
 }

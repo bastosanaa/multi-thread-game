@@ -8,6 +8,9 @@
 // Número de soldados a resgatar
 #define TOTAL_SOLDADOS 10
 
+// capacidade maxima do helicóptero
+#define MAX_SOLDADOS_HELICOPTERO 1
+
 // Direções
 #define DIR_CIMA     1
 #define DIR_BAIXO    2
