@@ -95,19 +95,16 @@ void mover_helicoptero(int direcao) {
 int checar_colisao_helicoptero() {
     // Colisão com topo da tela - EXPLODE
     if (helicoptero.y <= 0) {
-        printf("*** HELICÓPTERO EXPLODIU! Bateu no topo da tela! ***\n");
         return 1;
     }
     
     // Colisão com solo - EXPLODE  
     if (helicoptero.y >= ALTURA_TELA-1) {
-        printf("*** HELICÓPTERO EXPLODIU! Bateu no solo! ***\n");
         return 1;
     }
     
     // Colisão com bordas laterais - EXPLODE
     if (helicoptero.x <= 0 || helicoptero.x >= LARGURA_TELA-1) {
-        printf("*** HELICÓPTERO EXPLODIU! Bateu na parede lateral! ***\n");
         return 1;
     }
 
@@ -121,13 +118,11 @@ int checar_colisao_helicoptero() {
     pthread_mutex_unlock(&mutex_bateria_1);
     
     if (colidiu_bat0 || colidiu_bat1) {
-        printf("*** HELICÓPTERO EXPLODIU! Bateu em uma bateria! ***\n");
         return 1;
     }
     
     // Colisão com depósito - EXPLODE
     if (helicoptero.x == 3 && helicoptero.y == ALTURA_TELA/4) {
-        printf("*** HELICÓPTERO EXPLODIU! Bateu no depósito! ***\n");
         return 1;
     }
     
@@ -135,8 +130,6 @@ int checar_colisao_helicoptero() {
     if (helicoptero.x == LARGURA_TELA-2 && helicoptero.y == ALTURA_TELA/2) {
         return 0; // Não explode, é o local de resgate
     }
-    
-
 
     return 0;
 }
