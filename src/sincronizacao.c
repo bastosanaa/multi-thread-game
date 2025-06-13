@@ -13,6 +13,10 @@ pthread_mutex_t mutex_ponte;
 pthread_cond_t cond_deposito;
 pthread_cond_t cond_ponte;
 
+// variaveis de controle 
+int ponte_ocupada = 0; // Indica se a ponte está ocupada
+int deposito_ocupado = 0; // Indica se o depósito está ocupado
+
 void inicializar_sincronizacao() {
     pthread_mutex_init(&mutex_helicoptero, NULL);
     pthread_mutex_init(&mutex_foguetes, NULL);

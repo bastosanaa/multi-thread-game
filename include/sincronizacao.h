@@ -16,6 +16,10 @@ extern pthread_mutex_t mutex_ponte;         // Protege acesso à ponte
 extern pthread_cond_t cond_deposito;        // Sinaliza depósito livre
 extern pthread_cond_t cond_ponte;           // Sinaliza ponte livre
 
+// Variáveis de controle de exclusão mútua
+extern int ponte_ocupada;                
+extern int deposito_ocupado;            
+
 // Inicialização e destruição dos mecanismos de sincronização
 void inicializar_sincronizacao();
 void destruir_sincronizacao();

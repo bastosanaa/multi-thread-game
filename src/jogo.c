@@ -7,8 +7,6 @@ int soldados_resgatados = 0;
 EstadoJogo estado_jogo = EM_ANDAMENTO;
 
 // Flags de ocupação e vetor de baterias
-int ponte_ocupada = 0;
-int deposito_ocupado = 0;
 Bateria baterias[2];
 
 void inicializar_jogo() {
@@ -34,9 +32,6 @@ void inicializar_jogo() {
     baterias[1].y = ALTURA_TELA - 2;
     baterias[1].foguetes_restantes = 5;
     baterias[1].em_recarga = 0;
-
-    ponte_ocupada = 0;
-    deposito_ocupado = 0;
 
     soldados_resgatados = 0;
     estado_jogo = EM_ANDAMENTO;
