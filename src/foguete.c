@@ -44,7 +44,7 @@ void* thread_foguetes(void* arg) {
             }
         }
         pthread_mutex_unlock(&mutex_foguetes);
-        usleep(50000);
+        usleep(30000);
     }
     return NULL;
 }

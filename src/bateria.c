@@ -2,33 +2,51 @@
 #include "../include/jogo.h"
 #include "../include/foguete.h"
 #include "../include/sincronizacao.h"
+#include "../include/dificuldade.h"
 #include <pthread.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <time.h>
-
-// Parâmetros de dificuldade (exemplo)
-#define FOGUETES_POR_BATERIA 5
-#define TEMPO_RECARGA_MIN 100000 // 0.1s
-#define TEMPO_RECARGA_MAX 500000 // 0.5s
-
-extern Bateria baterias[2]; // Defina em jogo.c se necessário
 
 void* thread_bateria(void* arg) {
     int id = (int)(size_t)arg;
     Bateria* bat = &baterias[id];
-    int direcao_foguete = (id == 0) ? 1 : -1;
+    int direcao_foguete = -1; 
+    static int direcao_movimento[2] = {1, -1};
 
     srand(time(NULL) + id * 100);
 
-    while (1) {
+    while (estado_jogo == EM_ANDAMENTO) {
         pthread_mutex_t* mutex_bat = (id == 0) ? &mutex_bateria_0 : &mutex_bateria_1;
+        
+        // CORRIGIDO: velocidade dentro do loop
+        int velocidade_movimento = config_atual.velocidade_movimento;
+        
         pthread_mutex_lock(mutex_bat);
+        
         if (bat->foguetes_restantes > 0 && !bat->em_recarga) {
             criar_foguete(id, bat->x, bat->y, direcao_foguete);
             bat->foguetes_restantes--;
+            printf("Bateria %d disparou! Foguetes restantes: %d\n", id, bat->foguetes_restantes);
+            
+            // MOVIMENTO DA BATERIA
+            bat->x += direcao_movimento[id] * velocidade_movimento;
+            
+            // Verifica limites e inverte direção se necessário
+            if (bat->x <= 5) {  // Margem da esquerda
+                direcao_movimento[id] = 1; // Vai para direita
+            } else if (bat->x >= LARGURA_TELA - 5) {  // Margem da direita
+                direcao_movimento[id] = -1; // Vai para esquerda
+            }
+            
             pthread_mutex_unlock(mutex_bat);
-            usleep(300000 + rand() % 200000);
+    
+            // Usa configuração de dificuldade para intervalo de disparo
+            int intervalo = config_atual.intervalo_disparo_min + 
+                        rand() % (config_atual.intervalo_disparo_max - config_atual.intervalo_disparo_min + 1);
+            usleep(intervalo);
+    
         } else {
             pthread_mutex_unlock(mutex_bat);
 
@@ -49,13 +67,14 @@ void* thread_bateria(void* arg) {
             bat->em_recarga = 1;
             pthread_mutex_unlock(&mutex_deposito);
 
-            // Tempo de recarga aleatório
-            int tempo = TEMPO_RECARGA_MIN + rand() % (TEMPO_RECARGA_MAX - TEMPO_RECARGA_MIN + 1);
+            // Usa configuração de dificuldade para tempo de recarga
+            int tempo = config_atual.tempo_recarga_min + 
+                    rand() % (config_atual.tempo_recarga_max - config_atual.tempo_recarga_min + 1);
             usleep(tempo);
 
             // Finaliza recarga
             pthread_mutex_lock(mutex_bat);
-            bat->foguetes_restantes = FOGUETES_POR_BATERIA;
+            bat->foguetes_restantes = config_atual.foguetes_por_bateria;
             bat->em_recarga = 0;
             pthread_mutex_unlock(mutex_bat);
 

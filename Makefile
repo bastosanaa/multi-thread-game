@@ -10,7 +10,9 @@ SRCS = $(SRC)/main.c \
        $(SRC)/bateria.c \
        $(SRC)/foguete.c \
        $(SRC)/interface.c \
-       $(SRC)/sincronizacao.c
+       $(SRC)/sincronizacao.c \
+       $(SRC)/dificuldade.c
+
 
 OBJS = $(SRCS:$(SRC)/%.c=$(OBJ)/%.o)
 
