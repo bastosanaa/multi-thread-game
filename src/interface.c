@@ -39,12 +39,32 @@ static void desenhar_tela() {
             pthread_mutex_lock(&mutex_bateria_1);
             if (x == baterias[1].x && y == baterias[1].y) c = 'B';
             pthread_mutex_unlock(&mutex_bateria_1);
-            // Plataforma (direita)
+             // Plataforma (direita)
             if (x == LARGURA_TELA-2 && y == ALTURA_TELA/2) c = 'P';
-            // Depósito (esquerda)
-            if (x == 3 && y == ALTURA_TELA/4) c = 'D';
-            // Ponte (meio)
-            if (x == LARGURA_TELA/2 && y == ALTURA_TELA-2) c = '=';
+            
+            // DEPÓSITO/ARMAZÉM (esquerda) - Representação maior
+            if ((x >= 1 && x <= 4) && (y >= ALTURA_TELA-4 && y <= ALTURA_TELA-2)) {
+                if ((x == 1 || x == 4) && (y == ALTURA_TELA/4 - 1 || y == ALTURA_TELA/4 + 1)) 
+                    c = '+'; // Cantos
+                else if (x == 1 || x == 4) 
+                    c = '|'; // Paredes laterais
+                else if (y == ALTURA_TELA-4 || y == ALTURA_TELA-2) 
+                    c = '-'; // Teto e chão
+                else if (x == 2 && y == ALTURA_TELA-3) 
+                    c = 'D'; // Símbolo do depósito no centro
+                else 
+                    c = ' '; // Interior
+            }
+            
+             // PONTE (horizontal) - Representação mais realista e mais larga
+            if (y == ALTURA_TELA-3 && (x >= 8 && x <= 15)) {
+                c = '='; // Tabuleiro da ponte
+            }
+            // Pilares da ponte
+            if ((x == 8 || x == 15) && (y >= ALTURA_TELA-4 && y <= ALTURA_TELA-2)) {
+                c = 'I'; // Pilares verticais
+            }
+            
             // Foguetes
             pthread_mutex_lock(&mutex_foguetes);
             extern Foguete lista_foguetes[]; // Definido em foguete.c

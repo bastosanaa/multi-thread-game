@@ -8,7 +8,7 @@
 #define LARGURA_TELA 60
 
 // Número de soldados a resgatar DEBUG
-#define TOTAL_SOLDADOS 2
+#define TOTAL_SOLDADOS 10
 // #define TOTAL_SOLDADOS 10
 
 // capacidade maxima do helicóptero

@@ -7,11 +7,11 @@ int fase_atual = 1;
 static ConfigDificuldade configs[4] = {
     {0, 0, 0, 0, 0, 0}, 
     // FÁCIL - Fase 1
-    {3, 1500000, 2000000, 800000, 1200000, 3},  // velocidade 1 (lenta)
+    {10, 1500000, 2000000, 800000, 1200000, 3},  // velocidade 1 (lenta)
     // MÉDIO - Fase 2  
-    {6, 800000, 1200000, 400000, 700000, 5},    // velocidade 2 (média)
+    {20, 800000, 1200000, 400000, 700000, 5},    // velocidade 2 (média)
     // DIFÍCIL - Fase 3
-    {10, 300000, 600000, 200000, 400000, 8}     // velocidade 3 (rápida)
+    {30, 300000, 600000, 200000, 400000, 8}     // velocidade 3 (rápida)
 };
 
 void definir_dificuldade(NivelDificuldade nivel) {

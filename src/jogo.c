@@ -28,7 +28,7 @@ void inicializar_jogo_com_dificuldade(NivelDificuldade nivel) {
 
 void inicializar_jogo() {
     // Inicializa helicóptero na posição inicial (esquerda, meio da tela)
-    helicoptero.x = 2;
+    helicoptero.x = 5;
     helicoptero.y = ALTURA_TELA / 2;
     helicoptero.soldados_a_bordo = 0;
 
