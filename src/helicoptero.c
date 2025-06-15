@@ -61,7 +61,7 @@ void* thread_helicoptero(void* arg) {
         pthread_mutex_unlock(&mutex_helicoptero);
 
         // Pequeno delay para evitar uso excessivo de CPU
-        usleep(50000);
+        usleep(80000);
     }
     return NULL;
 }
@@ -135,7 +135,6 @@ int checar_colisao_helicoptero() {
 }
 
 // Função para processar resgate de soldados
-// Função para processar resgate de soldados
 void processar_resgate() {
     static int ultima_posicao_x = -1;
     static int ultima_posicao_y = -1;
@@ -154,6 +153,7 @@ void processar_resgate() {
         soldados_resgatados += helicoptero.soldados_a_bordo;
         helicoptero.soldados_a_bordo = 0;
         printf("RESGATOU soldados na plataforma!\n");
+        verificar_vitoria_fase();
         pthread_mutex_unlock(&mutex_soldados);
     }
     

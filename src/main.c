@@ -4,15 +4,19 @@
 #include "../include/foguete.h"
 #include "../include/interface.h"
 #include "../include/sincronizacao.h"
+#include "../include/dificuldade.h"
 #include <pthread.h>
 #include <stdio.h>
 
 int main() {
+    // REMOVE a seleção manual - sempre começa no FÁCIL
+    printf("Iniciando jogo! Progressão automática: Fácil → Médio → Difícil\n");
+    
     // Inicializa mecanismos de sincronização (mutexes, cond vars)
     inicializar_sincronizacao();
 
-    // Inicializa estado do jogo (posições, contadores, etc)
-    inicializar_jogo();
+    //sempre inicia no nível FÁCIL
+    inicializar_jogo_com_dificuldade(FACIL);
 
     pthread_t th_helicop, th_bateria0, th_bateria1, th_foguetes, th_interface;
 

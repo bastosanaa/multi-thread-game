@@ -1,6 +1,7 @@
 #include "../include/interface.h"
 #include "../include/jogo.h"
 #include "../include/sincronizacao.h"
+#include "../include/dificuldade.h"
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
@@ -59,11 +60,13 @@ static void desenhar_tela() {
     // Status
     printf("Soldados resgatados: %d/%d\n", soldados_resgatados, TOTAL_SOLDADOS);
     printf("Foguetes B0: %d | B1: %d\n", baterias[0].foguetes_restantes, baterias[1].foguetes_restantes);
+    printf("Fase %d - Dificuldade: %s\n", fase_atual,
+        nivel_atual == FACIL ? "Fácil" : 
+        nivel_atual == MEDIO ? "Médio" : "Difícil");
     printf("Status: ");
     if (estado_jogo == EM_ANDAMENTO) printf("Em andamento\n");
-    else if (estado_jogo == VITORIA) printf("VITÓRIA!\n");
+    else if (estado_jogo == VITORIA) printf("VITÓRIA TOTAL - Todas as fases completadas!\n");
     else printf("DERROTA!\n");
-    fflush(stdout);
 }
 
 // Thread de interface
