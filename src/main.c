@@ -9,14 +9,22 @@
 #include <stdio.h>
 
 int main() {
-    // REMOVE a seleção manual - sempre começa no FÁCIL
-    printf("Iniciando jogo! Progressão automática: Fácil → Médio → Difícil\n");
-    
+    int escolha = 0;
+    printf("Escolha o nível de dificuldade:\n");
+    printf("1 - Fácil\n2 - Médio\n3 - Difícil\n");
+    while (escolha < 1 || escolha > 3) {
+        printf("Digite o número da dificuldade desejada: ");
+        scanf("%d", &escolha);
+        if (escolha < 1 || escolha > 3) printf("Opção inválida. Tente novamente.\n");
+    }
+    NivelDificuldade nivel = (NivelDificuldade)escolha;
+    printf("Iniciando jogo no nível: %s\n", nivel == FACIL ? "Fácil" : nivel == MEDIO ? "Médio" : "Difícil");
+
     // Inicializa mecanismos de sincronização (mutexes, cond vars)
     inicializar_sincronizacao();
 
     //sempre inicia no nível FÁCIL
-    inicializar_jogo_com_dificuldade(FACIL);
+    inicializar_jogo_com_dificuldade(nivel);
 
     pthread_t th_helicop, th_bateria0, th_bateria1, th_foguetes, th_interface;
 

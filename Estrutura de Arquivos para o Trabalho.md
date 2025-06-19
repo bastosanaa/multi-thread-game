@@ -136,23 +136,6 @@ int main() {
 
 ---
 
-## Recomendações
-
-- Separe a lógica de sincronização (mutexes, variáveis de condição) em um módulo próprio para facilitar manutenção e evitar erros.
-- Use comentários explicativos em cada função, especialmente nas seções críticas (lock/unlock).
-- Utilize o Makefile para automatizar a compilação.
-- Documente no README como compilar e rodar o jogo, além de explicar a função de cada thread e mecanismo de sincronização.
-
----
-
-## Por que essa estrutura?
-
-- **Modularidade:** Facilita testes, manutenção e futuras expansões.
-- **Clareza:** Cada arquivo tem uma responsabilidade única, refletindo o papel de cada thread e recurso compartilhado[^1].
-- **Facilidade de avaliação:** O professor conseguirá identificar rapidamente onde está cada parte da lógica e da sincronização, atendendo ao critério de clareza da solução[^2].
-
-Se desejar, posso detalhar um exemplo de implementação para cada arquivo-chave ou fornecer um diagrama ASCII das relações entre threads e recursos.
-
 <div style="text-align: center">⁂</div>
 
 [^1]: README.md
