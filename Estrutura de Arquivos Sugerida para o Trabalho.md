@@ -1,5 +1,5 @@
 
-## Estrutura de Arquivos Sugerida para o Trabalho
+## Estrutura de Arquivos
 
 Com base na descrição detalhada do trabalho[^2] e na documentação do README[^1], segue uma proposta de estrutura de arquivos para organizar a implementação do jogo do helicóptero com pthreads, visando clareza, modularidade e facilidade de manutenção. Cada arquivo tem um papel bem definido, refletindo as responsabilidades das threads e os pontos críticos de sincronização.
 

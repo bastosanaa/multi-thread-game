@@ -10,6 +10,7 @@
 Foguete lista_foguetes[MAX_FOGUETES];
 
 void criar_foguete(int bateria_id, int x, int y, int direcao) {
+    (void)bateria_id;
     pthread_mutex_lock(&mutex_foguetes);
     for (int i = 0; i < MAX_FOGUETES; i++) {
         if (!lista_foguetes[i].ativo) {
@@ -24,6 +25,7 @@ void criar_foguete(int bateria_id, int x, int y, int direcao) {
 }
 
 void* thread_foguetes(void* arg) {
+    (void)arg;
     while (1) {
         pthread_mutex_lock(&mutex_foguetes);
         for (int i = 0; i < MAX_FOGUETES; i++) {

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <stdlib.h> // Para exit()
 
 // Limpa a tela (ANSI escape)
 static void limpar_tela() {
@@ -91,10 +92,13 @@ static void desenhar_tela() {
 
 // Thread de interface
 void* thread_interface(void* arg) {
+    (void)arg;
     while (estado_jogo == EM_ANDAMENTO) {
         desenhar_tela();
         usleep(100000); // Atualiza a cada 0.1s
     }
     desenhar_tela(); // Mostra tela final
+    // Encerra o programa quando o jogo termina
+    exit(0);
     return NULL;
 }

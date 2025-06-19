@@ -20,7 +20,7 @@ static int getch() {
 }
 
 // Função da thread do helicóptero
-void* thread_helicoptero(void* arg) {
+void* thread_helicoptero(void* /*arg*/) {
     int running = 1;
     while (running) {
         // Captura entrada do usuário (não bloqueante)
@@ -28,13 +28,23 @@ void* thread_helicoptero(void* arg) {
 
         // Determina direção
         int direcao = 0;
-        switch (tecla) {
-            case 'w': direcao = DIR_CIMA; break;
-            case 's': direcao = DIR_BAIXO; break;
-            case 'a': direcao = DIR_ESQUERDA; break;
-            case 'd': direcao = DIR_DIREITA; break;
-            default: direcao = 0; break;
+        if (tecla == 'w') direcao = DIR_CIMA;
+        else if (tecla == 's') direcao = DIR_BAIXO;
+        else if (tecla == 'a') direcao = DIR_ESQUERDA;
+        else if (tecla == 'd') direcao = DIR_DIREITA;
+        else if (tecla == 27) { // Sequência de escape para setas
+            int c1 = getch();
+            if (c1 == 91) {
+                int c2 = getch();
+                switch (c2) {
+                    case 'A': direcao = DIR_CIMA; break;    // Seta para cima
+                    case 'B': direcao = DIR_BAIXO; break;   // Seta para baixo
+                    case 'C': direcao = DIR_DIREITA; break; // Seta para direita
+                    case 'D': direcao = DIR_ESQUERDA; break;// Seta para esquerda
+                }
+            }
         }
+        else direcao = 0;
 
         // Move helicóptero (protegido por mutex)
         if (direcao) {
